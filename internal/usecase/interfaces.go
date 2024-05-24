@@ -18,3 +18,7 @@ type PostsRepo interface {
 	UpdatePermission(ctx context.Context, postID int, enable bool) (entity.Post, error)
 	Store(ctx context.Context, new entity.NewPost) (entity.Post, error)
 }
+
+type PostGetter interface {
+	GetById(ctx context.Context, id int) (entity.Post, error)
+}

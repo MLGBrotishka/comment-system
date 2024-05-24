@@ -3,24 +3,34 @@ package usecase
 import (
 	"comment-system/internal/entity"
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 )
 
 type CommentsUseCase struct {
 	repo        CommentsRepo
+	postGetter  PostGetter
 	commChannel map[int]map[string]chan entity.Comment
 }
 
-func NewComment(repo CommentsRepo) *CommentsUseCase {
+func NewComment(repo CommentsRepo, postGetter PostGetter) *CommentsUseCase {
 	uc := &CommentsUseCase{
 		repo:        repo,
+		postGetter:  postGetter,
 		commChannel: make(map[int]map[string]chan entity.Comment),
 	}
 	return uc
 }
 
 func (u *CommentsUseCase) Create(ctx context.Context, input entity.NewComment) (entity.Comment, error) {
+	post, err := u.postGetter.GetById(ctx, input.PostID)
+	if err != nil {
+		return entity.Comment{}, fmt.Errorf("CommentsUseCase - Create - u.postGetter.GetById: %w", err)
+	}
+	if !post.CommentsEnabled {
+		return entity.Comment{}, fmt.Errorf("CommentsUseCase - Create: %w", errors.New("comments are disabled"))
+	}
 	comment, err := u.repo.Store(ctx, input)
 	if err != nil {
 		return entity.Comment{}, fmt.Errorf("CommentsUseCase - Create - u.repo.Store: %w", err)
