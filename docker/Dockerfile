@@ -9,4 +9,4 @@ RUN make build
 
 EXPOSE 8000
 
-CMD [".bin/app"]
+CMD ["./bin/app"]
