@@ -42,9 +42,10 @@ func Run(cfg *config.Config) {
 		commsRepo = postgre.NewComments(pg, cfg.CommsRepo.Limit, cfg.CommsRepo.Offset)
 		postsRepo = postgre.NewPostsRepo(pg, cfg.CommsRepo.Limit, cfg.CommsRepo.Offset)
 	}
+	postsUC := usecase.NewPosts(postsRepo)
 	resolver := graphql.NewResolver(
-		usecase.NewPosts(postsRepo),
-		usecase.NewComment(commsRepo),
+		postsUC,
+		usecase.NewComment(commsRepo, postsUC),
 	)
 
 	router := http.NewServeMux()
