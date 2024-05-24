@@ -1,0 +1,64 @@
+type Post {
+  id: Int!
+  userId: Int!
+  commentsEnabled: Boolean!
+  name: String!
+  text: String!
+  createdAt: Timestamp!
+  comments(limit: Int = 25, offset: Int = 0): [Comment!]!
+}
+
+type Comment {
+  id: Int!
+  parentId: Int!
+  level: Int!
+  userId: Int!
+  postId: Int!
+  text: String!
+  createdAt: Timestamp!
+  replies(limit: Int = 25, offset: Int = 0): [Comment!]!
+}
+
+type User {
+  id: Int!
+  name: String!
+}
+
+type Query {
+  posts(limit: Int = 25, offset: Int = 0): [Post!]!
+  post(id: Int!): Post!
+  comments(postId: Int!, limit: Int = 25, offset: Int = 0): [Comment!]!
+  repliesToComment(commentId: Int!, limit: Int = 25, offset: Int = 0): [Comment!]!
+}
+
+input NewPost {
+  userId: Int!
+  commentsEnabled: Boolean
+  name: String!
+  text: String!
+}
+
+input NewComment {
+  parentId: Int
+  userId: Int!
+  postId: Int!
+  text: String!
+}
+
+input updatePostPermission {
+  id: Int!
+  userId: Int!
+  commentsEnabled: Boolean!
+}
+
+type Mutation {
+  createPost(input: NewPost!): Post!
+  createComment(input: NewComment!): Comment!
+  updatePostPermission(input: updatePostPermission!): Post!
+}
+
+type Subscription {
+  listenComments(postId: Int!): Comment!
+}
+
+scalar Timestamp

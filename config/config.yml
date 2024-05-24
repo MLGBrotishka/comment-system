@@ -1,0 +1,22 @@
+app:
+  name: 'comment-system'
+  version: '1.0.0'
+  in_memory: false
+
+http:
+  port: '8080'
+
+logger:
+  level: 'debug'
+
+comms_repo:
+  limit: 100
+  offset: 0
+
+posts_repo:
+  limit: 100
+  offset: 0
+
+postgres:
+  pool_max: 2
+  url: 'PG_URL=postgres://postgresUser:postgresPW@localhost:5432/postgresDB'
