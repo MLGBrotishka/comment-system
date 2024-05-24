@@ -5,7 +5,7 @@ services:
     container_name: go-app
     build: 
       context: ./
-      dockerfile: ./docker/server/Dockerfile
+      dockerfile: ./docker/Dockerfile
     env_file:
       - .env.example
     ports:
