@@ -37,20 +37,7 @@ type Subscription {
 ## Пример запросов
 Здесь только часть, лучше создавать используя схему
 
-Получение постов
-```
-curl -X POST http://localhost:8080/query \
--H "Content-Type: application/json" \
--d '{
-  "query": "query GetPosts($limit: Int = 25, $offset: Int = 0) { posts(limit: $limit, offset: $offset) { id, name, text } }",
-  "variables": {
-    "limit": 10,
-    "offset": 0
-  }
-}'
-```
-
-Создание поста
+####  Создание поста
 ```
 curl -X POST http://localhost:8080/query \
 -H "Content-Type: application/json" \
@@ -66,25 +53,29 @@ curl -X POST http://localhost:8080/query \
   }
 }'
 ```
+Ответ:
+```
+{"data":{"createPost":{"id":1,"name":"New Post","text":"Hello, world!"}}}
+```
 
-
-
-Комментарии к посту
+####  Получение постов
 ```
 curl -X POST http://localhost:8080/query \
 -H "Content-Type: application/json" \
 -d '{
-  "query": "query GetCommentsForPost($postId: Int!, $limit: Int = 25, $offset: Int = 0) { comments(postId: $postId, limit: $limit, offset: $offset) { id, text } }",
+  "query": "query GetPosts($limit: Int = 25, $offset: Int = 0) { posts(limit: $limit, offset: $offset) { id, name, text } }",
   "variables": {
-    "postId": 1,
-    "limit": 5,
+    "limit": 10,
     "offset": 0
   }
 }'
 ```
+Ответ:
+```
+{"data":{"posts":[{"id":1,"name":"New Post","text":"Hello, world!"}]}}
+```
 
-
-Новый комментарий
+####  Новый комментарий
 ```
 curl -X POST http://localhost:8080/query \
 -H "Content-Type: application/json" \
@@ -99,4 +90,26 @@ curl -X POST http://localhost:8080/query \
     }
   }
 }'
+```
+Ответ:
+```
+{"data":{"createComment":{"id":1,"text":"Great post!"}}}
+```
+
+####  Комментарии к посту
+```
+curl -X POST http://localhost:8080/query \
+-H "Content-Type: application/json" \
+-d '{
+  "query": "query GetCommentsForPost($postId: Int!, $limit: Int = 25, $offset: Int = 0) { comments(postId: $postId, limit: $limit, offset: $offset) { id, text } }",
+  "variables": {
+    "postId": 1,
+    "limit": 5,
+    "offset": 0
+  }
+}'
+```
+Ответ:
+```
+{"data":{"comments":[{"id":1,"text":"Great post!"},{"id":2,"text":"Great post!"},{"id":3,"text":"Great post!"}]}}
 ```
